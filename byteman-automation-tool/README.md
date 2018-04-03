@@ -97,6 +97,8 @@ below snippet into a terminal is enough):
 vers=4.0.1
 wget http://downloads.jboss.org/byteman/$vers/byteman-download-$vers-bin.zip
 unzip byteman-download-$vers-bin.zip
+find byteman-download-$vers/bin -name "*.bat" | xargs rm # optional, remove bat files
+find byteman-download-$vers/bin -name "*.sh" | sed 'p;s/\.sh//' | xargs -n2 mv  # optional, remove .sh
 export BYTEMAN_HOME=$(pwd)/byteman-download-$vers
 export PATH=$BYTEMAN_HOME/bin:$PATH
 ```
@@ -180,7 +182,7 @@ application (prior Java 9, attaching to a JVM requires the _tools.jar_
 to be available):
 
 ```
-$ bminstall $(pidof java)
+$ bminstall $(jps -l| awk '/ProfTest/{print $1}')
 $ bmsubmit -s $(pwd)/target/ProfTool-1.0.jar
 $ bmsubmit -c
 $ bmsubmit -l rules.btm
